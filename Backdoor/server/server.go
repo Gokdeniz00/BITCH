@@ -1,4 +1,4 @@
-package backdoor
+package main
 
 import (
 	"fmt"
@@ -9,18 +9,31 @@ import (
 	"time"
 )
 func main() {
-	addr:="127.0.0.1"+string(GeneratePortNumber())
-	http.HandleFunc("/upload",func(wr http.ResponseWriter, r *http.Request ){
+	addr:=fmt.Sprintf("127.0.0.1:%d",GeneratePortNumber())
+	http.HandleFunc("/upload",func(w http.ResponseWriter, r *http.Request ){
 		filedata,err:=os.ReadFile("static/upload.html")
 		if err != nil{
 			log.Fatal(err)
 		}
-		fmt.Fprintf(wr,string(filedata))
+		w.Header().Set("Content-Type","text/plain")
+		fmt.Fprint(w,string(filedata))
 	})
+	http.HandleFunc("/",func(w http.ResponseWriter, r *http.Request) {
+		if r.Method=="GET"{
+			commands,err:=os.ReadFile("commands.txt")
+			if err !=nil{
+				log.Fatal(err)
+			}
+			w.Header().Set("Content-Type","text/plain")
+			fmt.Fprint(w,string(commands))
+		}
+	})
+	fmt.Printf("Serving on %s",addr)
 	http.ListenAndServe(addr,nil)
+	
 }
-func GeneratePortNumber() uint16{
+func GeneratePortNumber() int{
 	randsource:=rand.New(rand.NewSource(time.Now().UnixNano()))
 	randport:=randsource.Intn(49151)+1024
-	return uint16(randport)
+	return randport
 }
