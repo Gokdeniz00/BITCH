@@ -29,7 +29,7 @@ func main() {
 			if err != nil{
 				log.Fatal(err)
 			}
-			w.Write("Successfully updated commands file!")
+			fmt.Fprint(w,"Successfully updated commands file!")
 		} 
 	})
 	http.HandleFunc("/",func(w http.ResponseWriter, r *http.Request) {
