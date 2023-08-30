@@ -16,15 +16,15 @@ func main() {
 			if err != nil{
 				log.Fatal(err)
 			}
-			w.Header().Set("Content-Type","text/plain")
 			fmt.Fprint(w,string(filedata))
 		}else if r.Method=="POST" {
-			commands :=r.Form.Get("commands")
-			cmdfile,err:=os.Open("commands.txt")
+			commands :=r.FormValue("commands")
+			fmt.Print(commands)
+			cmdfile,err:=os.OpenFile("commands.txt",os.O_RDWR,0644)
 			if err != nil {
 				log.Fatal(err)
 			}
-			defer cmdfile.Close()
+			cmdfile.Truncate(0)
 			_,err= cmdfile.Write([]byte(commands))
 			if err != nil{
 				log.Fatal(err)
