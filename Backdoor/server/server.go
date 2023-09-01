@@ -19,7 +19,6 @@ func main() {
 			fmt.Fprint(w,string(filedata))
 		}else if r.Method=="POST" {
 			commands :=r.FormValue("commands")
-			fmt.Print(commands)
 			cmdfile,err:=os.OpenFile("commands.txt",os.O_RDWR,0644)
 			if err != nil {
 				log.Fatal(err)
