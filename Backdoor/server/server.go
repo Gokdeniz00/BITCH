@@ -3,13 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
-	"math/rand"
 	"net/http"
 	"os"
-	"time"
 )
 func main() {
-	addr:=fmt.Sprintf("127.0.0.1:%d",GeneratePortNumber())
+	addr:=fmt.Sprintf("127.0.0.1:%d",443)
 	http.HandleFunc("/upload",func(w http.ResponseWriter, r *http.Request ){
 		if r.Method=="GET"{
 			filedata,err:=os.ReadFile("static/upload.html")
@@ -41,12 +39,7 @@ func main() {
 			fmt.Fprint(w,string(commands))
 		}
 	})
-	fmt.Printf("Serving on %s",addr)
+	fmt.Printf("Serving on http://%s\n",addr)
 	http.ListenAndServe(addr,nil)
 	
-}
-func GeneratePortNumber() int{
-	randsource:=rand.New(rand.NewSource(time.Now().UnixNano()))
-	randport:=randsource.Intn(49151)+1024
-	return randport
 }
